@@ -1,0 +1,18 @@
+// 1. player makes a movement
+//DONE a.moveTo
+//OPEN b.moveFrom
+
+// 2. was the move valid?
+//     a. YES, update the board Obj
+//     b. NO,
+//       - do not update board,
+//       - prompt another move
+
+//     // Determining validity
+//         1. Can the piece move in the requested way?
+//         2. is a piece currently on that square?
+//             //a. Capture, opposing players piece
+//             //b. Piece is yours, cannot move to this square.
+//                 //Notify User, and make another selection
+
+// 3. was
