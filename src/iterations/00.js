@@ -10,8 +10,8 @@ function App() {
 	const [currentMoveInfo, setCurrentMoveInfo] = useState(null);
 
 	//movement info
-	const [playerColor, setPlayerColor] = useState('white');
-	const [pieceType, setPieceType] = useState('pawn');
+	const [currentPlayerColor, setCurrentPlayerColor] = useState('white');
+	const [pieceType, setPieceType] = useState();
 	//from:
 	const [fromLetter, setFromLetter] = useState('a'); // to useState , read check react form submissions
 	const [fromNumber, setFromNumber] = useState('1');
@@ -19,14 +19,16 @@ function App() {
 	const [toLetter, setToLetter] = useState('a');
 	const [toNumber, setToNumber] = useState('1');
 
-	const moveFromTileId = fromLetter + fromNumber;
-	const moveToTileId = toLetter + toNumber;
-
 	const checkForValidMove = () => {
+		const moveFromTileId = fromLetter + fromNumber;
+		const moveToTileId = toLetter + toNumber;
 		// order of operations, no point updating
+
+		console.log(911, pieceType, moveFromTileId, moveToTileId);
 
 		// Moving to same tile your on
 		if (moveFromTileId === moveToTileId) {
+			console.log(11, moveFromTileId, moveToTileId);
 			alert(
 				'Invalid move: cannot move piece to the same tile your currently on'
 			);
@@ -34,13 +36,15 @@ function App() {
 		}
 
 		// Do currently occupy this tile with any of your pieces?
-		if (
-			chessBoard[moveToTileId] !== '' &&
-			chessBoard[moveToTileId].playerColor === playerColor
-		) {
-			alert('Invalid move: your piece currently occupies this tile');
-			return false;
-		}
+		console.log('chessboard', chessBoard[moveToTileId]);
+		// if (
+		// 	chessBoard[currentMoveInfo.moveToTileId] !== '' &&
+		// 	chessBoard[currentMoveInfo.moveToTileId].currentPlayerColor ===
+		// 		currentPlayerColor
+		// ) {
+		// 	alert('Invalid move: your piece currently occupies this tile');
+		// 	return false;
+		// }
 
 		// Piece moved adheres to rules of game?
 		if (pieceType === 'rook') {
@@ -54,6 +58,50 @@ function App() {
 		return false;
 	};
 
+	// const checkForValidMove1111 = () => {
+	// 	// order of operations, no point updating
+	// 	// setCurrentMoveInfo({
+	// 	// 	currentPlayerColor,
+	// 	// 	pieceType: pieceRef.current.value,
+	// 	// 	currentLetter: fromLetterRef.current.value,
+	// 	// 	currentNumber: fromNumberRef.current.value,
+	// 	// 	moveFromTileId:
+	// 	// 		fromLetterRef.current.value + fromNumberRef.current.value,
+	// 	// 	moveToTileId: toLetterRef.current.value + toNumberRef.current.value,
+	// 	// });
+
+	// 	console.log(911, currentMoveInfo, 'i am behind!');
+
+	// 	// Moving to same tile you on
+	// 	if (currentMoveInfo.moveFromTileId === currentMoveInfo.moveToTileId) {
+	// 		alert(
+	// 			'Invalid move: cannot move piece to the same tile your currently on'
+	// 		);
+	// 		return false;
+	// 	}
+
+	// 	// Do currently occupy this tile with any of your pieces?
+	// 	if (
+	// 		chessBoard[currentMoveInfo.moveToTileId] !== '' &&
+	// 		chessBoard[currentMoveInfo.moveToTileId].currentPlayerColor ===
+	// 			currentPlayerColor
+	// 	) {
+	// 		alert('Invalid move: your piece currently occupies this tile');
+	// 		return false;
+	// 	}
+
+	// 	// Piece moved adheres to rules of game?
+	// 	if (currentMoveInfo.pieceType === 'rook') {
+	// 		if (rook_CheckMoveWasValid(currentMoveInfo)) {
+	// 			// consider making this rook check it's on hook
+	// 			// should this be a component taking props instead of a function taking args???
+	// 			return true;
+	// 		}
+	// 	}
+
+	// 	return false;
+	// };
+
 	const updateChessBoard = () => {
 		//update the chessboard with the new move
 		console.log(333, 'inside chessboard update');
@@ -61,18 +109,30 @@ function App() {
 
 		allChessBoardTilesById.forEach((currentTileId) => {
 			//currentTileId ex. 'a3'
-			if (currentTileId === moveToTileId) {
-				console.log('match at', currentTileId, moveToTileId);
+			if (currentTileId === currentMoveInfo.moveToTileId) {
+				console.log('match at', currentMoveInfo.moveToTileId);
 
-				// update chessboard with new move
+				///AVOID MUTATION OF {}
+				// setChessBoard((prevChessboard) => {
+				// 	// set tile info to newly moved tile
+				// 	// spread ???
+				// 	prevChessboard[currentTileId] = currentMoveInfo; // ex. chessBoard['a3'] = {}
+				// 	return prevChessboard;
+				// });
+
+				// ONE WAY TO GET AROUND
+				// setChessBoard((prevChessboard) => {
+				// 	const newChessBoard = { ...prevChessboard };
+				// 	// set tile info to newly moved tile
+				// 	// spread ???
+				// 	newChessBoard[currentTileId] = currentMoveInfo; // ex. chessBoard['a3'] = {}
+				// 	return newChessBoard;
+				// });
+
+				//PREFERED WAY
 				setChessBoard((prevChessboard) => ({
 					...prevChessboard,
-					[currentTileId]: {
-						playerColor,
-						pieceType,
-						moveFromTileId,
-						moveToTileId,
-					}, // ex. chessBoard['a3'] = {}
+					[currentTileId]: currentMoveInfo, // ex. chessBoard['a3'] = {}
 				}));
 			}
 		});
@@ -92,9 +152,9 @@ function App() {
 		// 3. Player makes a move via UI
 
 		// 4. Was the move valid?
-		// 4a. movement to same tile
-		// 4b. tile is occupied by another one of your pieces which obstruct movement
-		// 4c. does it adhere to movement rules for that piece
+		//DONE 4a. movement to same tile
+		//DONE 4b. tile is occupied by another one of your pieces which obstruct movement
+		//DONE 4c. does it adhere to movement rules for that piece
 
 		if (checkForValidMove() === false) return false; // invalid move, stop all actions
 		console.log(222, 'PASSED: valid move');
@@ -115,15 +175,24 @@ function App() {
 		//*** TO DO *** pawn
 
 		// switch player, to prep next move
-		if (playerColor === 'white') {
-			setPlayerColor('black');
+		if (currentPlayerColor === 'white') {
+			setCurrentPlayerColor('black');
 		} else {
-			setPlayerColor('white');
+			setCurrentPlayerColor('white');
 		}
 	};
 
 	useEffect(() => {
 		console.log(411, 'in use effect');
+		// setCurrentMoveInfo({
+		// 	currentPlayerColor,
+		// 	pieceType: pieceRef.current.value,
+		// 	currentLetter: fromLetterRef.current.value,
+		// 	currentNumber: fromNumberRef.current.value,
+		// 	moveFromTileId:
+		// 		fromLetterRef.current.value + fromNumberRef.current.value,
+		// 	moveToTileId: toLetterRef.current.value + toNumberRef.current.value,
+		// });
 	}, []);
 
 	return (
@@ -131,7 +200,7 @@ function App() {
 			<form onSubmit={submitHandler}>
 				<div>
 					<label>
-						Move {playerColor}:
+						Move {currentPlayerColor}:
 						<select
 							name='pieceType'
 							id='pieceType'
@@ -139,12 +208,12 @@ function App() {
 								setPieceType(e.target.value);
 							}}
 						>
-							{/* <option value='pawn'>Pawn</option> */}
+							<option value='pawn'>Pawn</option>
 							<option value='rook'>Rook</option>
-							{/* <option value='bishop'>Bishop</option>
+							<option value='bishop'>Bishop</option>
 							<option value='knight'>Knight</option>
 							<option value='queen'>Queen</option>
-							<option value='king'>King</option> */}
+							<option value='king'>King</option>
 						</select>
 					</label>
 				</div>
@@ -226,6 +295,75 @@ function App() {
 					<input type='submit' />
 				</div>
 			</form>
+
+			{/* <form onSubmit={submitHandler}>
+				<div>
+					<label>
+						Move {currentPlayerColor}:
+						<select name='pieceType' id='pieceType' ref={pieceRef}>
+							<option value='pawn'>Pawn</option>
+							<option value='rook'>Rook</option>
+							<option value='bishop'>Bishop</option>
+							<option value='knight'>Knight</option>
+							<option value='queen'>Queen</option>
+							<option value='king'>King</option>
+						</select>
+					</label>
+				</div>
+				<div>
+					<label>
+						From:
+						<select name='letter' id='letter' ref={fromLetterRef}>
+							<option value='a'>a</option>
+							<option value='b'>b</option>
+							<option value='c'>c</option>
+							<option value='d'>d</option>
+							<option value='e'>e</option>
+							<option value='f'>f</option>
+							<option value='g'>g</option>
+							<option value='h'>h</option>
+						</select>
+						<select name='number' id='number' ref={fromNumberRef}>
+							<option value='1'>1</option>
+							<option value='2'>2</option>
+							<option value='3'>3</option>
+							<option value='4'>4</option>
+							<option value='5'>5</option>
+							<option value='6'>6</option>
+							<option value='7'>7</option>
+							<option value='8'>8</option>
+						</select>
+					</label>
+				</div>
+				<div>
+					<label>
+						To:
+						<select name='letter' id='letter' ref={toLetterRef}>
+							<option value='a'>a</option>
+							<option value='b'>b</option>
+							<option value='c'>c</option>
+							<option value='d'>d</option>
+							<option value='e'>e</option>
+							<option value='f'>f</option>
+							<option value='g'>g</option>
+							<option value='h'>h</option>
+						</select>
+						<select name='number' id='number' ref={toNumberRef}>
+							<option value='1'>1</option>
+							<option value='2'>2</option>
+							<option value='3'>3</option>
+							<option value='4'>4</option>
+							<option value='5'>5</option>
+							<option value='6'>6</option>
+							<option value='7'>7</option>
+							<option value='8'>8</option>
+						</select>
+					</label>
+				</div>
+				<div>
+					<input type='submit' />
+				</div>
+			</form> */}
 		</>
 	);
 }

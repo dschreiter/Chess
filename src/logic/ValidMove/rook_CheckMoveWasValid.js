@@ -1,10 +1,10 @@
 import { BOARD_TILE_LETTERS, BOARD_TILE_NUMBERS } from '../constants';
 
-export const rook_CheckMoveWasValid = ({
+export const rook_CheckMoveWasValid = (
 	currentLetter,
 	currentNumber,
-	moveToTileId,
-}) => {
+	moveToTileId
+) => {
 	/*** Check X Axis for valid move ***/
 	//1. get possibilities
 	const X_possibilities = BOARD_TILE_LETTERS.map((letter) => {
