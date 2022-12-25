@@ -1,14 +1,15 @@
 import { BOARD_TILE_LETTERS, BOARD_TILE_NUMBERS } from '../constants';
 
 export const rook_CheckMoveWasValid = (
-	currentLetter,
-	currentNumber,
+	fromLetter,
+	fromNumber,
 	moveToTileId
 ) => {
+	console.log(888, fromLetter, fromNumber, moveToTileId);
 	/*** Check X Axis for valid move ***/
 	//1. get possibilities
 	const X_possibilities = BOARD_TILE_LETTERS.map((letter) => {
-		return letter + currentNumber; //['a1','b1','c1', etc]
+		return letter + fromNumber; //['a1','b1','c1', etc]
 	});
 
 	//2. check for match
@@ -29,7 +30,7 @@ export const rook_CheckMoveWasValid = (
 	/*** Check Y Axis for valid move ***/
 	//1. get possibilities
 	const Y_possibilities = BOARD_TILE_NUMBERS.map((number) => {
-		return currentLetter + number; //['a1','a2','a3', etc]
+		return fromLetter + number; //['a1','a2','a3', etc]
 	});
 	//2. check for match
 	const is_Y_moveValid = Y_possibilities.some(
