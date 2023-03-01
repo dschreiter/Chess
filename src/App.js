@@ -2,6 +2,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { CREATE_CHESSBOARD_TILE_IDS } from './logic/constants';
 import { rook_CheckMoveWasValid } from './logic/ValidMove/rook_CheckMoveWasValid';
+
+import { bishop_CheckMoveWasValid } from './logic/ValidMove/bishop_CheckMoveWasValid';
+import { knight_CheckMoveWasValid } from './logic/ValidMove/knight_CheckMoveWasValid';
+import { queen_CheckMoveWasValid } from './logic/ValidMove/queen_CheckMoveWasValid';
+import { king_CheckMoveWasValid } from './logic/ValidMove/king_CheckMoveWasValid';
+import { pawn_CheckMoveWasValid } from './logic/ValidMove/pawn_CheckMoveWasValid';
 import './style.css';
 
 function App() {
@@ -11,9 +17,9 @@ function App() {
 
 	//movement info
 	const [playerColor, setPlayerColor] = useState('white');
-	const [pieceType, setPieceType] = useState('pawn');
+	const [pieceType, setPieceType] = useState('rook');
 	//from:
-	const [fromLetter, setFromLetter] = useState('a'); // to useState , read check react form submissions
+	const [fromLetter, setFromLetter] = useState('a');
 	const [fromNumber, setFromNumber] = useState('1');
 	//to:
 	const [toLetter, setToLetter] = useState('a');
@@ -23,7 +29,7 @@ function App() {
 	const moveToTileId = toLetter + toNumber;
 
 	const checkForValidMove = () => {
-		// order of operations, no point updating
+		// order of operations, no point updating if move is not valid
 
 		// Moving to same tile your on
 		if (moveFromTileId === moveToTileId) {
@@ -44,7 +50,53 @@ function App() {
 
 		// Piece moved adheres to rules of game?
 		if (pieceType === 'rook') {
-			if (rook_CheckMoveWasValid(toLetter, toNumber, moveToTileId)) {
+			if (rook_CheckMoveWasValid(fromLetter, fromNumber, moveToTileId)) {
+				// consider making this rook check it's on hook
+				// should this be a component taking props instead of a function taking args???
+				return true;
+			}
+		} else if (pieceType === 'bishop') {
+			console.log(2, pieceType);
+			if (
+				bishop_CheckMoveWasValid(fromLetter, fromNumber, moveToTileId)
+			) {
+				// consider making this rook check it's on hook
+				// should this be a component taking props instead of a function taking args???
+				return true;
+			}
+		} else if (pieceType === 'knight') {
+			console.log(3, pieceType);
+			if (
+				knight_CheckMoveWasValid(fromLetter, fromNumber, moveToTileId)
+			) {
+				// consider making this rook check it's on hook
+				// should this be a component taking props instead of a function taking args???
+				return true;
+			}
+		} else if (pieceType === 'queen') {
+			console.log(4, pieceType);
+			if (queen_CheckMoveWasValid(fromLetter, fromNumber, moveToTileId)) {
+				// consider making this rook check it's on hook
+				// should this be a component taking props instead of a function taking args???
+				return true;
+			}
+		} else if (pieceType === 'king') {
+			console.log(5, pieceType);
+			if (
+				king_CheckMoveWasValid(
+					fromLetter,
+					fromNumber,
+					moveFromTileId,
+					moveToTileId
+				)
+			) {
+				// consider making this rook check it's on hook
+				// should this be a component taking props instead of a function taking args???
+				return true;
+			}
+		} else if (pieceType === 'pawn') {
+			console.log(6, pieceType);
+			if (pawn_CheckMoveWasValid(fromLetter, fromNumber, moveToTileId)) {
 				// consider making this rook check it's on hook
 				// should this be a component taking props instead of a function taking args???
 				return true;
@@ -139,12 +191,12 @@ function App() {
 								setPieceType(e.target.value);
 							}}
 						>
-							{/* <option value='pawn'>Pawn</option> */}
+							<option value='pawn'>Pawn</option>
 							<option value='rook'>Rook</option>
-							{/* <option value='bishop'>Bishop</option>
+							<option value='bishop'>Bishop</option>
 							<option value='knight'>Knight</option>
 							<option value='queen'>Queen</option>
-							<option value='king'>King</option> */}
+							<option value='king'>King</option>
 						</select>
 					</label>
 				</div>
